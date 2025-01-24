@@ -26,7 +26,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 3.0; // Boost exposure
+      renderer.toneMappingExposure = 2.5; // Boost brightness further
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -34,7 +34,7 @@
       // Load Environment Map
       const textureLoader = new THREE.TextureLoader();
       const envMap = textureLoader.load(
-        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/clarens_midday_1k.jpg",
+        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/studio_small_03_1k.jpg",
         () => {
           scene.environment = envMap;
           scene.background = envMap;
@@ -42,23 +42,20 @@
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 8);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 5);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 8);
-      directionalLight.position.set(5, 5, 5);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+      directionalLight.position.set(2, 5, 3);
       directionalLight.castShadow = true;
       scene.add(directionalLight);
 
-      const pointLight = new THREE.PointLight(0xffffff, 10, 50);
-      pointLight.position.set(0, 5, 0);
-      scene.add(pointLight);
-
-      const spotLight = new THREE.SpotLight(0xffffff, 8);
-      spotLight.position.set(0, 10, 0);
-      spotLight.angle = Math.PI / 6;
-      spotLight.castShadow = true;
-      scene.add(spotLight);
+      // Test Object (Optional)
+      const testGeometry = new THREE.BoxGeometry(1, 1, 1);
+      const testMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      const testCube = new THREE.Mesh(testGeometry, testMaterial);
+      testCube.position.set(0, 1, 0);
+      scene.add(testCube);
 
       camera.position.set(0, 2, 5);
 
@@ -71,10 +68,9 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.color.set(0xffffff);
-              child.material.metalness = 1;
-              child.material.roughness = 0.1;
-              child.material.envMapIntensity = 5;
+              child.material.envMapIntensity = 3;
+              child.material.metalness = 0.5;
+              child.material.roughness = 0.2;
               child.material.needsUpdate = true;
             }
           });
