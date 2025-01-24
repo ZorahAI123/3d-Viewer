@@ -34,22 +34,37 @@
       // Load GLTF Model
       const loader = new THREE.GLTFLoader();
       loader.load(
-        "https://zorahai123.github.io/Zorah3D/model.glb", // Replace with the correct .glb file link
+        "https://zorahai123.github.io/Zorah3D/zorah1.glb", // Correct link to your .glb file
         (gltf) => {
+          console.log("Model loaded successfully");
           scene.add(gltf.scene);
         },
-        undefined,
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
         (error) => {
           console.error("An error occurred loading the GLTF model:", error);
         }
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
       scene.add(ambientLight);
 
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(5, 5, 5).normalize();
+      scene.add(directionalLight);
+
+      // Add Grid Helper for Debugging
+      const gridHelper = new THREE.GridHelper(10, 10);
+      scene.add(gridHelper);
+
+      // Add Axes Helper for Debugging
+      const axesHelper = new THREE.AxesHelper(5);
+      scene.add(axesHelper);
+
       // Camera Position
-      camera.position.z = 5;
+      camera.position.set(0, 2, 5);
 
       // Animation Loop
       function animate() {
@@ -61,4 +76,5 @@
     </script>
   </body>
 </html>
+
 
