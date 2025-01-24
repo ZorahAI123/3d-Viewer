@@ -26,7 +26,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.7; // Reduced exposure slightly
+      renderer.toneMappingExposure = 1.5; // Clear reduction for darker tone
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -42,14 +42,14 @@
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Reduced to darker tone
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Noticeable reduction in ambient light
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.3); // Reduced directional light intensity
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Softer directional light
       directionalLight.position.set(4, 8, 5);
       scene.add(directionalLight);
 
-      const spotLight = new THREE.SpotLight(0xffffff, 0.7); // Slightly dimmed spotlight
+      const spotLight = new THREE.SpotLight(0xffffff, 0.6); // Reduced spotlight for less focused brightness
       spotLight.position.set(3, 6, 2);
       spotLight.angle = Math.PI / 6;
       scene.add(spotLight);
@@ -66,9 +66,9 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 1.8; // Reduced reflection intensity
+              child.material.envMapIntensity = 1.5; // Reduced reflections for darker tone
               child.material.metalness = 0.9; // Maintain metallic look
-              child.material.roughness = 0.3; // Slightly rougher for texture balance
+              child.material.roughness = 0.3; // Slightly rougher for less shine
               child.material.needsUpdate = true;
             }
           });
