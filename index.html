@@ -26,7 +26,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 2.5; // Boost brightness further
+      renderer.toneMappingExposure = 3; // Boost brightness further
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -42,12 +42,16 @@
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Adjusted intensity
       scene.add(ambientLight);
 
       const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
-      directionalLight.position.set(2, 5, 3);
+      directionalLight.position.set(3, 6, 4);
       directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 1024; // Better shadows
+      directionalLight.shadow.mapSize.height = 1024;
+      directionalLight.shadow.camera.near = 0.5;
+      directionalLight.shadow.camera.far = 50;
       scene.add(directionalLight);
 
       // Test Object (Optional)
@@ -68,7 +72,7 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 3;
+              child.material.envMapIntensity = 4; // Brighter reflections
               child.material.metalness = 0.5;
               child.material.roughness = 0.2;
               child.material.needsUpdate = true;
