@@ -25,7 +25,8 @@
       );
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.toneMapping = THREE.ACESFilmicToneMapping; // For HDR lighting
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.5;
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -33,19 +34,19 @@
       // Load Environment Map
       const textureLoader = new THREE.TextureLoader();
       const envMap = textureLoader.load(
-        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/royal_esplanade_1k.jpg",
+        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/venice_sunset_1k.jpg",
         () => {
-          scene.environment = envMap; // Set environment map
-          scene.background = envMap; // Set as the background
+          scene.environment = envMap;
+          scene.background = envMap;
         }
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 3);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-      directionalLight.position.set(5, 5, 5).normalize();
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+      directionalLight.position.set(10, 10, 10);
       scene.add(directionalLight);
 
       camera.position.set(0, 2, 5);
@@ -57,6 +58,12 @@
         "https://zorahai123.github.io/Zorah3D/zorah1.glb",
         (gltf) => {
           const model = gltf.scene;
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.material.envMapIntensity = 1.5;
+              child.material.needsUpdate = true;
+            }
+          });
           scene.add(model);
 
           // Set up animations
@@ -81,7 +88,7 @@
 
       function animate() {
         requestAnimationFrame(animate);
-        if (mixer) mixer.update(0.01); // Update animations
+        if (mixer) mixer.update(0.01);
         controls.update();
         renderer.render(scene, camera);
       }
@@ -90,6 +97,5 @@
   </body>
 </html>
 
-</html>
 
 
