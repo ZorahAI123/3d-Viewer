@@ -26,12 +26,12 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.5; // Balanced brightness
+      renderer.toneMappingExposure = 2.2; // Increased exposure to brighten the scene
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-      // Load Environment Map
+      // Environment Map
       const textureLoader = new THREE.TextureLoader();
       const envMap = textureLoader.load(
         "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/studio_small_03_1k.jpg",
@@ -41,19 +41,21 @@
         }
       );
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Balanced ambient light
+      // Lighting: Adjusted for better brightness and shadows
+      const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Boosted brightness
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-      directionalLight.position.set(2, 5, 3);
-      directionalLight.castShadow = false; // Disable shadows for better performance
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 3); // Strong directional light
+      directionalLight.position.set(5, 10, 7); // Positioned higher for balanced lighting
+      directionalLight.castShadow = false;
       scene.add(directionalLight);
 
+      // Position the camera to focus on the model
       camera.position.set(0, 2, 5);
 
       let mixer;
 
+      // Load the GLTF model
       const loader = new THREE.GLTFLoader();
       loader.load(
         "https://zorahai123.github.io/Zorah3D/zorah1.glb",
@@ -61,15 +63,15 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 2.5; // Subtle reflections
-              child.material.metalness = 0.5;
-              child.material.roughness = 0.3;
+              child.material.envMapIntensity = 3; // Balanced reflections
+              child.material.metalness = 0.7; // Enhanced metallic effect
+              child.material.roughness = 0.2; // Reduced roughness for clarity
               child.material.needsUpdate = true;
             }
           });
           scene.add(model);
 
-          // Set up animations
+          // Set up animations (if present)
           if (gltf.animations && gltf.animations.length) {
             mixer = new THREE.AnimationMixer(model);
             gltf.animations.forEach((clip) => {
@@ -83,12 +85,14 @@
         }
       );
 
+      // Resize handler to maintain aspect ratio
       window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
 
+      // Animation loop
       function animate() {
         requestAnimationFrame(animate);
         if (mixer) mixer.update(0.01);
@@ -99,6 +103,7 @@
     </script>
   </body>
 </html>
+
 
 
 
