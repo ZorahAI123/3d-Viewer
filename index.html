@@ -25,8 +25,7 @@
       );
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 2.5; // Boost brightness further
+      renderer.toneMapping = THREE.ACESFilmicToneMapping; // For HDR lighting
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -34,28 +33,20 @@
       // Load Environment Map
       const textureLoader = new THREE.TextureLoader();
       const envMap = textureLoader.load(
-        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/studio_small_03_1k.jpg",
+        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/royal_esplanade_1k.jpg",
         () => {
-          scene.environment = envMap;
-          scene.background = envMap;
+          scene.environment = envMap; // Set environment map
+          scene.background = envMap; // Set as the background
         }
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
-      directionalLight.position.set(2, 5, 3);
-      directionalLight.castShadow = true;
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+      directionalLight.position.set(5, 5, 5).normalize();
       scene.add(directionalLight);
-
-      // Test Object (Optional)
-      const testGeometry = new THREE.BoxGeometry(1, 1, 1);
-      const testMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-      const testCube = new THREE.Mesh(testGeometry, testMaterial);
-      testCube.position.set(0, 1, 0);
-      scene.add(testCube);
 
       camera.position.set(0, 2, 5);
 
@@ -66,14 +57,6 @@
         "https://zorahai123.github.io/Zorah3D/zorah1.glb",
         (gltf) => {
           const model = gltf.scene;
-          model.traverse((child) => {
-            if (child.isMesh) {
-              child.material.envMapIntensity = 3;
-              child.material.metalness = 0.5;
-              child.material.roughness = 0.2;
-              child.material.needsUpdate = true;
-            }
-          });
           scene.add(model);
 
           // Set up animations
@@ -98,7 +81,7 @@
 
       function animate() {
         requestAnimationFrame(animate);
-        if (mixer) mixer.update(0.01);
+        if (mixer) mixer.update(0.01); // Update animations
         controls.update();
         renderer.render(scene, camera);
       }
@@ -107,6 +90,7 @@
   </body>
 </html>
 
+</html>
 
 
 
