@@ -26,7 +26,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.8; // Adjusted for a balanced brightness
+      renderer.toneMappingExposure = 2.1; // Slightly increased for more brightness
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -42,15 +42,14 @@
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Mid-intensity for base illumination
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Slightly brighter ambient light
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // Medium highlights
-      directionalLight.position.set(4, 8, 5); // Positioned to enhance reflections
-      directionalLight.castShadow = false;
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.7); // Increased intensity for highlights
+      directionalLight.position.set(4, 8, 5); // Positioned for balanced reflections
       scene.add(directionalLight);
 
-      const spotLight = new THREE.SpotLight(0xffffff, 0.8); // Subtle spotlight for focus
+      const spotLight = new THREE.SpotLight(0xffffff, 0.9); // Subtle spotlight for focused brightness
       spotLight.position.set(3, 6, 2);
       spotLight.angle = Math.PI / 6;
       scene.add(spotLight);
@@ -67,9 +66,9 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 2.0; // Slightly boosted reflections
-              child.material.metalness = 0.9; // Metallic but not overpowering
-              child.material.roughness = 0.25; // Add slight texture for realism
+              child.material.envMapIntensity = 2.3; // Enhanced reflections
+              child.material.metalness = 0.9; // Retain strong metallic look
+              child.material.roughness = 0.2; // Slightly smoother surface
               child.material.needsUpdate = true;
             }
           });
@@ -107,6 +106,7 @@
     </script>
   </body>
 </html>
+
 
 
 
