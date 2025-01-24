@@ -12,9 +12,9 @@
     </style>
   </head>
   <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
     <script>
       // Create Scene, Camera, Renderer
       const scene = new THREE.Scene();
@@ -34,7 +34,7 @@
       // Load GLTF Model
       const loader = new THREE.GLTFLoader();
       loader.load(
-        "https://zorahai123.github.io/Zorah3D/zorah1.glb", // Correct link to your .glb file
+        "https://zorahai123.github.io/Zorah3D/zorah1.glb", // Correct .glb file link
         (gltf) => {
           console.log("Model loaded successfully");
           scene.add(gltf.scene);
@@ -54,14 +54,6 @@
       const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
       directionalLight.position.set(5, 5, 5).normalize();
       scene.add(directionalLight);
-
-      // Add Grid Helper for Debugging
-      const gridHelper = new THREE.GridHelper(10, 10);
-      scene.add(gridHelper);
-
-      // Add Axes Helper for Debugging
-      const axesHelper = new THREE.AxesHelper(5);
-      scene.add(axesHelper);
 
       // Camera Position
       camera.position.set(0, 2, 5);
