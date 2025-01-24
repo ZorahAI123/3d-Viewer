@@ -12,12 +12,10 @@
     </style>
   </head>
   <body>
-   <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
     <script>
-      // Create Scene, Camera, Renderer
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         75,
@@ -29,40 +27,55 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      // Add Orbit Controls
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-      // Load GLTF Model
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+      directionalLight.position.set(5, 5, 5).normalize();
+      scene.add(directionalLight);
+
+      const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
+      hemisphereLight.position.set(0, 10, 0);
+      scene.add(hemisphereLight);
+
+      camera.position.set(0, 2, 5);
+
+      let mixer;
+
       const loader = new THREE.GLTFLoader();
       loader.load(
-        "https://zorahai123.github.io/Zorah3D/zorah1.glb", // Correct .glb file link
+        "https://zorahai123.github.io/Zorah3D/zorah1.glb",
         (gltf) => {
-          console.log("Model loaded successfully");
-          scene.add(gltf.scene);
+          const model = gltf.scene;
+          scene.add(model);
+
+          // Set up animations
+          if (gltf.animations && gltf.animations.length) {
+            mixer = new THREE.AnimationMixer(model);
+            gltf.animations.forEach((clip) => {
+              mixer.clipAction(clip).play();
+            });
+          }
         },
-        (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-        },
+        undefined,
         (error) => {
           console.error("An error occurred loading the GLTF model:", error);
         }
       );
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-      directionalLight.position.set(5, 5, 5).normalize();
-      scene.add(directionalLight);
-
-      // Camera Position
-      camera.position.set(0, 2, 5);
-
-      // Animation Loop
       function animate() {
         requestAnimationFrame(animate);
-        controls.update(); // Update controls
+        if (mixer) mixer.update(0.01);
+        controls.update();
         renderer.render(scene, camera);
       }
       animate();
