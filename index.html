@@ -26,7 +26,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 2.2; // Increased exposure to brighten the scene
+      renderer.toneMappingExposure = 2; // Balanced exposure
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -41,16 +41,14 @@
         }
       );
 
-      // Lighting: Adjusted for better brightness and shadows
-      const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Boosted brightness
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); // Subtle ambient light
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 3); // Strong directional light
-      directionalLight.position.set(5, 10, 7); // Positioned higher for balanced lighting
-      directionalLight.castShadow = false;
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Stronger directional light
+      directionalLight.position.set(5, 10, 7);
       scene.add(directionalLight);
 
-      // Position the camera to focus on the model
       camera.position.set(0, 2, 5);
 
       let mixer;
@@ -63,9 +61,10 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 3; // Balanced reflections
-              child.material.metalness = 0.7; // Enhanced metallic effect
-              child.material.roughness = 0.2; // Reduced roughness for clarity
+              child.material.envMapIntensity = 3; // Boost reflections
+              child.material.metalness = 1; // Max metalness
+              child.material.roughness = 0.1; // Smooth for shiny look
+              child.material.color.set(0x888888); // Neutral metallic tint
               child.material.needsUpdate = true;
             }
           });
@@ -103,6 +102,7 @@
     </script>
   </body>
 </html>
+
 
 
 
