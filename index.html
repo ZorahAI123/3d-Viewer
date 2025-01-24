@@ -26,12 +26,12 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 2; // Balanced exposure
+      renderer.toneMappingExposure = 1.5; // Adjusted for better brightness
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-      // Environment Map
+      // Load Environment Map
       const textureLoader = new THREE.TextureLoader();
       const envMap = textureLoader.load(
         "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/studio_small_03_1k.jpg",
@@ -42,12 +42,17 @@
       );
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); // Subtle ambient light
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Lowered intensity
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Stronger directional light
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Reduced intensity
       directionalLight.position.set(5, 10, 7);
       scene.add(directionalLight);
+
+      const spotLight = new THREE.SpotLight(0xffffff, 1); // Add spotlight for focused highlights
+      spotLight.position.set(5, 5, 5);
+      spotLight.castShadow = true;
+      scene.add(spotLight);
 
       camera.position.set(0, 2, 5);
 
@@ -61,10 +66,9 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 3; // Boost reflections
-              child.material.metalness = 1; // Max metalness
-              child.material.roughness = 0.1; // Smooth for shiny look
-              child.material.color.set(0x888888); // Neutral metallic tint
+              child.material.envMapIntensity = 1.5; // Reduced to balance reflections
+              child.material.metalness = 1; // Full metal look
+              child.material.roughness = 0.2; // Smooth but not too polished
               child.material.needsUpdate = true;
             }
           });
@@ -102,6 +106,7 @@
     </script>
   </body>
 </html>
+
 
 
 
