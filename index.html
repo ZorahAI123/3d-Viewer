@@ -26,33 +26,28 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.5; // Clear reduction for darker tone
+      renderer.toneMappingExposure = 1.8; // Adjust for balanced brightness
       document.body.appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-      // Load Environment Map
+      // Load Environment Map (use an HDRI map for more realistic reflections)
       const textureLoader = new THREE.TextureLoader();
       const envMap = textureLoader.load(
-        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/studio_small_03_1k.jpg",
+        "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/textures/equirectangular/royal_esplanade_1k.jpg", // A better HDRI map
         () => {
           scene.environment = envMap;
           scene.background = envMap;
         }
       );
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Noticeable reduction in ambient light
+      // Lighting (use warm tones for a natural metallic effect)
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Add warmth and even lighting
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Softer directional light
-      directionalLight.position.set(4, 8, 5);
+      const directionalLight = new THREE.DirectionalLight(0xfff8dc, 1.5); // Warm directional light
+      directionalLight.position.set(5, 10, 7);
       scene.add(directionalLight);
-
-      const spotLight = new THREE.SpotLight(0xffffff, 0.6); // Reduced spotlight for less focused brightness
-      spotLight.position.set(3, 6, 2);
-      spotLight.angle = Math.PI / 6;
-      scene.add(spotLight);
 
       camera.position.set(0, 2, 5);
 
@@ -66,9 +61,10 @@
           const model = gltf.scene;
           model.traverse((child) => {
             if (child.isMesh) {
-              child.material.envMapIntensity = 1.5; // Reduced reflections for darker tone
-              child.material.metalness = 0.9; // Maintain metallic look
-              child.material.roughness = 0.3; // Slightly rougher for less shine
+              child.material.envMapIntensity = 2.5; // Increase reflection for metallic look
+              child.material.metalness = 1; // Full metallic
+              child.material.roughness = 0.1; // Smooth for realistic shading
+              child.material.color.set(0xd4af37); // Add a gold tint to match the Blender look
               child.material.needsUpdate = true;
             }
           });
@@ -106,6 +102,7 @@
     </script>
   </body>
 </html>
+
 
 
 
